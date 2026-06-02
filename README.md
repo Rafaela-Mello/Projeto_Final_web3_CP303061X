@@ -68,7 +68,7 @@ cd ms_email
 }
 ```
 
-**Login** — `POST http://localhost:8081/users/login`
+**Login** — `POST http://localhost:8081/auth/login`
 
 ```json
 {

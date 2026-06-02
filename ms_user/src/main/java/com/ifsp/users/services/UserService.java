@@ -6,6 +6,7 @@ import com.ifsp.users.dtos.RecoveryJwtTokenDto;
 import com.ifsp.users.dtos.UserProfileDto;
 import com.ifsp.users.entities.Role;
 import com.ifsp.users.entities.User;
+import com.ifsp.users.enums.RoleName;
 import com.ifsp.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -59,5 +61,19 @@ public class UserService {
                 .toList();
 
         return new UserProfileDto(user.getId(), user.getEmail(), roles);
+    }
+
+    public User getOrCreateUserForCode(String email) {
+        return userRepository.findByEmail(email).orElseGet(() -> {
+            var randomPassword = UUID.randomUUID().toString();
+
+            var newUser = User.builder()
+                    .email(email)
+                    .password(passwordEncoder.encode(randomPassword))
+                    .roles(List.of(Role.builder().name(RoleName.ROLE_CUSTOMER).build()))
+                    .build();
+
+            return userRepository.save(newUser);
+        });
     }
 }

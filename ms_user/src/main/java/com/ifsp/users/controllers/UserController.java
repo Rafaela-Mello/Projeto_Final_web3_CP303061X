@@ -1,8 +1,6 @@
 package com.ifsp.users.controllers;
 
 import com.ifsp.users.dtos.CreateUserDto;
-import com.ifsp.users.dtos.LoginUserDto;
-import com.ifsp.users.dtos.RecoveryJwtTokenDto;
 import com.ifsp.users.dtos.UserProfileDto;
 import com.ifsp.users.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +20,6 @@ public class UserController {
     public ResponseEntity<Void> createUser(@RequestBody CreateUserDto dto) {
         userService.createUser(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<RecoveryJwtTokenDto> login(@RequestBody LoginUserDto dto) {
-        RecoveryJwtTokenDto token = userService.authenticateUser(dto);
-        return ResponseEntity.ok(token);
     }
 
     @GetMapping("/me")
