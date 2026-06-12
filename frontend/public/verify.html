@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificar Código</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <main class="container">
+        <h1>Verificar Código</h1>
+        <p>Digite o código de 6 dígitos enviado para seu e-mail.</p>
+
+        <form action="/verify-code" method="POST">
+            <input type="hidden" id="email" name="email">
+
+            <label for="code">Código</label>
+            <input type="text" id="code" name="code" required maxlength="6" pattern="[0-9]{6}" placeholder="000000">
+
+            <button type="submit">Verificar</button>
+        </form>
+
+        <p><a href="/">Voltar</a></p>
+    </main>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const email = params.get('email');
+
+        if (!email) {
+            window.location.href = '/';
+        } else {
+            document.getElementById('email').value = email;
+        }
+    </script>
+</body>
+</html>

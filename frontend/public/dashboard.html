@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <main class="container">
+        <h1>Dashboard</h1>
+        <p>Autenticação concluída com sucesso.</p>
+        <p id="token-info">Token JWT armazenado em sessionStorage.</p>
+        <p><a href="/">Sair e voltar ao início</a></p>
+    </main>
+
+    <script>
+        const token = sessionStorage.getItem('token');
+
+        if (!token) {
+            window.location.href = '/';
+        } else {
+            document.getElementById('token-info').textContent =
+                'Token JWT armazenado: ' + token.substring(0, 20) + '...';
+        }
+    </script>
+</body>
+</html>

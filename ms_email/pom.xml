@@ -12,7 +12,7 @@
 	<artifactId>email</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ms_email</name>
-	<description>Email Service - estrutura base Etapa 1</description>
+	<description>Email Service - consumer RabbitMQ, envio real e persistência (Etapa 3)</description>
 	<properties>
 		<java.version>21</java.version>
 	</properties>
@@ -36,6 +36,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jackson</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.mysql</groupId>

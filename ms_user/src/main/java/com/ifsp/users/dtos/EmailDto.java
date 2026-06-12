@@ -3,8 +3,8 @@ package com.ifsp.users.dtos;
 import java.util.UUID;
 
 public record EmailDto(
+        UUID userId,
         String emailTo,
         String subject,
-        String text,
-        UUID userId
+        String text
 ) { }

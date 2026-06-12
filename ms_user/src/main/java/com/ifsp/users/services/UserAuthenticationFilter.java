@@ -26,27 +26,22 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (isPublicEndpoint(request)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+        if (!isPublicEndpoint(request)) {
+            var token = recoverToken(request);
 
-        var token = recoverToken(request);
+            if (token != null) {
+                var email = jwtTokenService.getSubjectFromToken(token);
+                var user = userRepository.findByEmail(email)
+                        .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        if (token != null) {
-            var email = jwtTokenService.getSubjectFromToken(token);
-            var user = userRepository.findByEmail(email)
-                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                var userDetails = new UserDetailsImpl(user);
+                var authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails.getUsername(),
+                        null,
+                        userDetails.getAuthorities());
 
-            var userDetails = new UserDetailsImpl(user);
-            var authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails.getUsername(),
-                    null,
-                    userDetails.getAuthorities());
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        } else {
-            throw new RuntimeException("Token JWT não fornecido!");
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         }
 
         filterChain.doFilter(request, response);
@@ -61,8 +56,19 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean isPublicEndpoint(HttpServletRequest request) {
-        String uri = request.getRequestURI();
-        return Arrays.asList(SecurityConfiguration.ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED)
-                .contains(uri);
+        String uri = normalizePath(request.getRequestURI(), request.getContextPath());
+        return Arrays.stream(SecurityConfiguration.ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED)
+                .anyMatch(endpoint -> uri.equals(endpoint) || uri.startsWith(endpoint + "/"))
+                || uri.startsWith("/auth/");
+    }
+
+    private String normalizePath(String uri, String contextPath) {
+        if (contextPath != null && !contextPath.isEmpty() && uri.startsWith(contextPath)) {
+            uri = uri.substring(contextPath.length());
+        }
+        if (uri.endsWith("/") && uri.length() > 1) {
+            uri = uri.substring(0, uri.length() - 1);
+        }
+        return uri.isEmpty() ? "/" : uri;
     }
 }
