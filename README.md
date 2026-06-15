@@ -240,28 +240,6 @@ Authorization: Bearer <token>
 
 ---
 
-## Capturas de tela
-
-Salve as imagens em `docs/screenshots/` e referencie abaixo:
-
-| # | Etapa | Arquivo |
-|---|-------|---------|
-| 1 | Tela inicial (e-mail) | `docs/screenshots/01-tela-email.png` |
-| 2 | Tela de verificação de código | `docs/screenshots/02-verificacao-codigo.png` |
-| 3 | Tela de cadastro (nome/cargo) | `docs/screenshots/03-cadastro-perfil.png` |
-| 4 | Dashboard com perfil e endpoint protegido | `docs/screenshots/04-dashboard.png` |
-| 5 | E-mail recebido com o código | `docs/screenshots/05-email-codigo.png` |
-
-<!-- Descomente após adicionar as imagens:
-![Tela inicial](docs/screenshots/01-tela-email.png)
-![Verificação de código](docs/screenshots/02-verificacao-codigo.png)
-![Cadastro de perfil](docs/screenshots/03-cadastro-perfil.png)
-![Dashboard](docs/screenshots/04-dashboard.png)
-![E-mail com código](docs/screenshots/05-email-codigo.png)
--->
-
----
-
 ## Endpoints principais
 
 | Serviço | Método | Rota | Descrição |
