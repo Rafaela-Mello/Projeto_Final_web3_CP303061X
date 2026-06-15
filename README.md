@@ -251,14 +251,3 @@ Authorization: Bearer <token>
 | ms_user | GET | `/users/test/customer` | Endpoint protegido (CUSTOMER) |
 | frontend | GET | `/api/protected` | Proxy para endpoint protegido |
 | frontend | GET | `/api/me` | Proxy para perfil do usuário |
-
----
-
-## Entrega
-
-Para a entrega da Semana 4, crie a tag:
-
-```bash
-git tag entrega4
-git push origin entrega4
-```
