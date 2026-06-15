@@ -7,6 +7,7 @@ const PORT = 3000;
 const USER_SERVICE_URL = process.env.USER_SERVICE_URL || 'http://127.0.0.1:8081';
 
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
@@ -67,7 +68,7 @@ app.post('/verify-code', async (req, res) => {
                 <p>Autenticando...</p>
                 <script>
                     sessionStorage.setItem('token', ${JSON.stringify(token)});
-                    window.location.href = '/dashboard';
+                    window.location.href = '/register';
                 </script>
             </body>
             </html>
@@ -80,6 +81,83 @@ app.post('/verify-code', async (req, res) => {
 
 app.get('/dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+});
+
+app.get('/register', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'register.html'));
+});
+
+app.post('/register', async (req, res) => {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+        return res.status(401).send('Token não informado.');
+    }
+
+    const { name, role } = req.body;
+
+    if (!name?.trim() || !role) {
+        return res.status(400).send('Informe nome e cargo.');
+    }
+
+    try {
+        await axios.post(
+            `${USER_SERVICE_URL}/users/update-profile`,
+            { name: name.trim(), role },
+            {
+                headers: {
+                    Authorization: authHeader,
+                    'Content-Type': 'application/json'
+                },
+                timeout: 30000
+            }
+        );
+        res.status(200).json({ success: true });
+    } catch (error) {
+        console.error('Erro em /register:', error.message, error.response?.status, error.response?.data);
+        const status = error.response?.status || 500;
+        const message = error.response?.data?.message || 'Erro ao atualizar perfil.';
+        res.status(status).send(message);
+    }
+});
+
+app.get('/api/protected', async (req, res) => {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+        return res.status(401).send('Token não informado.');
+    }
+
+    try {
+        const response = await axios.get(`${USER_SERVICE_URL}/users/test/customer`, {
+            headers: { Authorization: authHeader },
+            timeout: 30000
+        });
+        res.status(response.status).send(response.data);
+    } catch (error) {
+        const status = error.response?.status || 500;
+        const message = error.response?.data || error.message;
+        res.status(status).send(typeof message === 'string' ? message : JSON.stringify(message));
+    }
+});
+
+app.get('/api/me', async (req, res) => {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+        return res.status(401).send('Token não informado.');
+    }
+
+    try {
+        const response = await axios.get(`${USER_SERVICE_URL}/users/me`, {
+            headers: { Authorization: authHeader },
+            timeout: 30000
+        });
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        const status = error.response?.status || 500;
+        res.status(status).json(error.response?.data || { message: error.message });
+    }
 });
 
 function renderErrorPage(message, email = '') {

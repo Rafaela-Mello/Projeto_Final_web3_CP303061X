@@ -34,6 +34,11 @@ public class SecurityConfiguration {
             "/users/test/customer"
     };
 
+    public static final String[] ENDPOINTS_AUTHENTICATED = {
+            "/users/me",
+            "/users/update-profile"
+    };
+
     @Autowired
     private UserAuthenticationFilter userAuthenticationFilter;
 
@@ -46,7 +51,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/users/me").authenticated()
+                        .requestMatchers(ENDPOINTS_AUTHENTICATED).authenticated()
                         .requestMatchers(ENDPOINTS_ADMIN).hasRole("ADMINISTRATOR")
                         .requestMatchers(ENDPOINTS_CUSTOMER).hasRole("CUSTOMER")
                         .anyRequest().authenticated()

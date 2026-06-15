@@ -1,0 +1,42 @@
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# Java / Maven
+target/
+*.class
+*.jar
+*.war
+*.log
+.mvn/wrapper/maven-wrapper.jar
+hs_err_pid*
+replay_pid*
+
+# Node.js
+node_modules/
+npm-debug.log*
+package-lock.json.bak
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Ambiente e credenciais locais
+.env
+.env.local
+*.env
+application-local.properties
+**/application-local.properties
+
+# Build
+dist/
+build/
+out/
+
+# Logs
+logs/
+*.log.*

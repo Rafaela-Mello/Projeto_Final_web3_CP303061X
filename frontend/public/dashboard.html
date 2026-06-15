@@ -7,11 +7,20 @@
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-    <main class="container">
+    <main class="container dashboard">
         <h1>Dashboard</h1>
-        <p>Autenticação concluída com sucesso.</p>
-        <p id="token-info">Token JWT armazenado em sessionStorage.</p>
-        <p><a href="/">Sair e voltar ao início</a></p>
+        <p>Bem-vindo! Use os botões abaixo para testar os endpoints protegidos.</p>
+
+        <div class="actions">
+            <button type="button" id="btn-protected">Testar endpoint protegido</button>
+            <button type="button" id="btn-profile">Meu perfil</button>
+            <button type="button" id="btn-logout" class="secondary">Sair</button>
+        </div>
+
+        <section id="result-section" hidden>
+            <h2>Resultado</h2>
+            <pre id="result"></pre>
+        </section>
     </main>
 
     <script>
@@ -19,10 +28,44 @@
 
         if (!token) {
             window.location.href = '/';
-        } else {
-            document.getElementById('token-info').textContent =
-                'Token JWT armazenado: ' + token.substring(0, 20) + '...';
         }
+
+        const resultSection = document.getElementById('result-section');
+        const resultEl = document.getElementById('result');
+
+        function showResult(data) {
+            resultEl.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+            resultSection.hidden = false;
+        }
+
+        document.getElementById('btn-protected').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/protected', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const text = await response.text();
+                showResult(response.ok ? text : `Erro ${response.status}: ${text}`);
+            } catch (error) {
+                showResult(error.message);
+            }
+        });
+
+        document.getElementById('btn-profile').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/me', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                showResult(response.ok ? data : `Erro ${response.status}: ${JSON.stringify(data)}`);
+            } catch (error) {
+                showResult(error.message);
+            }
+        });
+
+        document.getElementById('btn-logout').addEventListener('click', () => {
+            sessionStorage.removeItem('token');
+            window.location.href = '/';
+        });
     </script>
 </body>
 </html>

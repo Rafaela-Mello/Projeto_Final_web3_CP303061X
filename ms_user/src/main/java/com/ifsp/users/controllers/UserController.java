@@ -1,6 +1,7 @@
 package com.ifsp.users.controllers;
 
 import com.ifsp.users.dtos.CreateUserDto;
+import com.ifsp.users.dtos.UpdateProfileDto;
 import com.ifsp.users.dtos.UserProfileDto;
 import com.ifsp.users.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,14 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<UserProfileDto> getCurrentUser(Authentication authentication) {
         return ResponseEntity.ok(userService.getUserInformation(authentication));
+    }
+
+    @PostMapping("/update-profile")
+    public ResponseEntity<UserProfileDto> updateProfile(
+            Authentication authentication,
+            @RequestBody UpdateProfileDto dto) {
+        String email = authentication.getName();
+        return ResponseEntity.ok(userService.updateProfile(email, dto));
     }
 
     @GetMapping("/test")

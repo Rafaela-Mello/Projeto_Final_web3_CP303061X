@@ -58,7 +58,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
     private boolean isPublicEndpoint(HttpServletRequest request) {
         String uri = normalizePath(request.getRequestURI(), request.getContextPath());
         return Arrays.stream(SecurityConfiguration.ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED)
-                .anyMatch(endpoint -> uri.equals(endpoint) || uri.startsWith(endpoint + "/"))
+                .anyMatch(uri::equals)
                 || uri.startsWith("/auth/");
     }
 

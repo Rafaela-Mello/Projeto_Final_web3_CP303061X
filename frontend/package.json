@@ -1,7 +1,7 @@
 {
   "name": "projeto-final-web3-frontend",
   "version": "1.0.0",
-  "description": "Frontend Etapa 3 - solicitação e validação de código por e-mail",
+  "description": "Frontend Etapa 4 - fluxo completo com cadastro de perfil e dashboard",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
